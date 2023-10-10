@@ -162,8 +162,8 @@ class Matrix {
             System.out.println("Against right matrix: \n" + other.toString());
         }
 
-        // dot products technically can only be applied to a row "this" vector and a column "other" vector
-        // the width of "this" must be the same as the height of "other"
+        // dot products technically can only be applied to a row left vector and a column right vector
+        // the width of left must be the same as the height of right
 
         if (this.isRowVector() && other.isColumnVector()) {
 
