@@ -50,7 +50,7 @@ class Main {
         System.out.println(testM3.matrixMultiply(testM3) + "\n");
 
         // test speed with large matrices 
-        Matrix bigMatrix = new Matrix(10, 10);
+        Matrix bigMatrix = new Matrix(1000, 1000);
 
         long startTime = System.nanoTime();
         for (int i = 0; i < bigMatrix.getHeight(); i++) {
@@ -66,10 +66,26 @@ class Main {
         endTime = System.nanoTime();
         System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to add bigAdd.");
 
-        // startTime = System.nanoTime();
-        // Matrix bigMul = bigMatrix.matrixMultiply(bigMatrix);
-        // endTime = System.nanoTime();
-        // System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to multiply bigMul.");
+        startTime = System.nanoTime();
+        Matrix bigMul = bigMatrix.matrixMultiply(bigMatrix);
+        endTime = System.nanoTime();
+        System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to multiply bigMul.");
+
+        if (bigMatrix.getWidth() <= 80) {
+            System.out.println("\n" + bigMul.toString());
+        } else {
+            // check everything is correct
+            boolean allCorrect = true;
+            float expected = bigMul.getValueAt(0, 0);
+            for (int i = 0; i < bigMul.getHeight(); i++) {
+                for (int j = 0; j < bigMul.getWidth(); j++) {
+                    if (bigMul.getValueAt(i, j) != expected) {
+                        allCorrect = false;
+                    }
+                }
+            }
+            System.out.println("AllCorrect is " + allCorrect);
+        }
 
     }
 

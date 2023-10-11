@@ -3,10 +3,11 @@ package com.multilayer;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService; 
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 class Matrix {
 
-    private static short DEBUG = 3;
+    private static short DEBUG = 2;
     private static int MAX_THREADS = 3;
 
     // the first bracket shall refer to a row 
@@ -259,8 +260,11 @@ class Matrix {
                     }
                 }
 
-                // destroy the pool 
+                // destroy the pool (stop accepting new tasks)
                 pool.shutdown();
+
+                // await all tasks to finish
+                pool.awaitTermination(120, TimeUnit.SECONDS); // Timeout in 2 minutes. Significantly greater than expected max time.
 
                 return product;
 
@@ -268,7 +272,7 @@ class Matrix {
                 throw new MatrixException("Matrix multiplication can only be performed if the left matrix width is the same as the right matrix height.");
             }
 
-        } catch (MatrixException e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
