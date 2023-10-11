@@ -1,10 +1,13 @@
 package com.multilayer;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService; 
+import java.util.concurrent.Executors;
 
 class Matrix {
 
-    private static short DEBUG = 0;
+    private static short DEBUG = 3;
+    private static int MAX_THREADS = 3;
 
     // the first bracket shall refer to a row 
     // the second bracket shall refer to a column
@@ -157,7 +160,7 @@ class Matrix {
 
     public float dotProduct(Matrix other) throws MatrixException {
 
-        if (DEBUG >= 3) {
+        if (DEBUG >= 5) {
             System.out.println("Dotting left matrix: \n" + this.toString());
             System.out.println("Against right matrix: \n" + other.toString());
         }
@@ -175,7 +178,7 @@ class Matrix {
                     product += this.getValueAt(0, i) * other.getValueAt(i, 0);
                 }
 
-                if (DEBUG >= 2) {
+                if (DEBUG >= 4) {
                     System.out.println("Dotted product is: " + product + "\n");
                 }
 
@@ -191,6 +194,46 @@ class Matrix {
 
     }
 
+    // subclass to assist in multiplication
+    private class MatrixMultiplyTask implements Runnable {
+
+        private int i;
+        private int j;
+
+        private Matrix left;
+        private Matrix right;
+        private Matrix product;
+
+        public MatrixMultiplyTask(int i, int j, Matrix left, Matrix right, Matrix product) {
+            super();
+            this.i = i;
+            this.j = j;
+            this.left = left;
+            this.right = right;
+            this.product = product;
+        }
+
+        @Override
+        public void run() {
+
+            try {
+
+                // dot product to set the value at i, j
+                float value = this.left.getRow(this.i).dotProduct(this.right.getColumn(this.j));
+                product.setValueAt(value, this.i, this.j);
+
+                if (DEBUG >= 3) {
+                    System.out.println("Set value to " + value + " at " + this.i + ", " + this.j);
+                }
+
+            } catch (MatrixException e) {
+                System.out.println(e.toString());
+            }
+            
+        }
+
+    }
+
     public Matrix matrixMultiply(Matrix other) {
 
         // the width of the left matrix must be the same as the height of the right matrix
@@ -202,11 +245,22 @@ class Matrix {
 
                 Matrix product = new Matrix(this.getHeight(), other.getWidth());
 
+                // create task array
+                Runnable[][] tasks = new Runnable[product.getHeight()][product.getWidth()];
+
+                // create thread pool
+                ExecutorService pool = Executors.newFixedThreadPool(MAX_THREADS);
+
+                // fill and execute tasks
                 for (int i = 0; i < product.getHeight(); i++) {
                     for (int j = 0; j < product.getWidth(); j++) {
-                        product.setValueAt(this.getRow(i).dotProduct(other.getColumn(j)), i, j);
+                        tasks[i][j] = new MatrixMultiplyTask(i, j, this, other, product);
+                        pool.execute(tasks[i][j]);
                     }
                 }
+
+                // destroy the pool 
+                pool.shutdown();
 
                 return product;
 

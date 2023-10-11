@@ -1,5 +1,8 @@
 package com.multilayer;
 
+import java.util.concurrent.ExecutorService; 
+import java.util.concurrent.Executors;
+
 class Main {
 
     public static void main(String[] args) {
@@ -26,12 +29,14 @@ class Main {
 
         float testLearningRate = 10f;
 
+        // print assignment matrices 
         System.out.println("Assignment matrices ----------");
         System.out.println(L1TestWeights.toString() + "\n");
         System.out.println(L1TestBiases.toString() + "\n");
         System.out.println(L2TestWeights.toString() + "\n");
         System.out.println(L2TestBiases.toString() + "\n");
 
+        // print basic operations 
         System.out.println("Basic matrices ----------");
         System.out.println(testM1.add(testM2) + "\n");
         System.out.println(testM2.getRow(1).toString() + "\n");
@@ -43,6 +48,28 @@ class Main {
         }
         System.out.println(testM2.matrixMultiply(testM2) + "\n");
         System.out.println(testM3.matrixMultiply(testM3) + "\n");
+
+        // test speed with large matrices 
+        Matrix bigMatrix = new Matrix(10, 10);
+
+        long startTime = System.nanoTime();
+        for (int i = 0; i < bigMatrix.getHeight(); i++) {
+            for (int j = 0; j < bigMatrix.getWidth(); j++) {
+                bigMatrix.setValueAt(2, i, j); 
+            }
+        }
+        long endTime = System.nanoTime();
+        System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to fill bigMatrix.");
+
+        startTime = System.nanoTime();
+        Matrix bigAdd = bigMatrix.add(bigMatrix);
+        endTime = System.nanoTime();
+        System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to add bigAdd.");
+
+        // startTime = System.nanoTime();
+        // Matrix bigMul = bigMatrix.matrixMultiply(bigMatrix);
+        // endTime = System.nanoTime();
+        // System.out.println("Took " + ((endTime - startTime) / 1000000) + " ms to multiply bigMul.");
 
     }
 
