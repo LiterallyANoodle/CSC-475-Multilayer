@@ -7,27 +7,19 @@ class Main {
 
     public static void main(String[] args) {
 
-        // basic test matrices
-        Matrix testM1 = new Matrix(3, 3);
-        Matrix testM2 = new Matrix(new float[][] {{1f, 2f, 3f},
-                                                  {4f, 5f, 6f},
-                                                  {7f, 8f, 9f}});
-        Matrix testM3 = new Matrix(new float[][] {{1f, 2f},
-                                                  {3f, 4f}});
-
         // Standardized matrices from assignment pdf: 
-        Matrix L1TestWeights = new Matrix(new float[][] {{-0.21f, 0.72f, -0.25f, 1f}, 
-                                                         {-0.94f, -0.41f, -0.47f, 0.63f},
-                                                         {0.15f, 0.55f, -0.49f, -0.75f}});
-        Matrix L1TestBiases = new Matrix(new float[][] {{0.1f},
-                                                        {-0.36f},
-                                                        {-0.31f}});
-        Matrix L2TestWeights = new Matrix(new float[][] {{0.76f, 0.48f, -0.73f},
-                                                         {0.34f, 0.89f, -0.23f}});
-        Matrix L2TestBiases = new Matrix(new float[][] {{0.16f},
-                                                        {-0.46f}});
+        Matrix L1TestWeights = new Matrix(new double[][] {{-0.21, 0.72, -0.25, 1}, 
+                                                         {-0.94, -0.41, -0.47, 0.63},
+                                                         {0.15, 0.55, -0.49, -0.75}});
+        Matrix L1TestBiases = new Matrix(new double[][] {{0.1},
+                                                        {-0.36},
+                                                        {-0.31}});
+        Matrix L2TestWeights = new Matrix(new double[][] {{0.76, 0.48, -0.73},
+                                                         {0.34, 0.89, -0.23}});
+        Matrix L2TestBiases = new Matrix(new double[][] {{0.16},
+                                                        {-0.46}});
 
-        float testLearningRate = 10f;
+        double testLearningRate = 10f;
 
         // print assignment matrices 
         System.out.println("Assignment matrices ----------");
@@ -35,6 +27,43 @@ class Main {
         System.out.println(L1TestBiases.toString() + "\n");
         System.out.println(L2TestWeights.toString() + "\n");
         System.out.println(L2TestBiases.toString() + "\n");
+
+        // matrixTesting();
+        layerTesting();
+
+    }
+
+    private static void layerTesting() {
+
+        Matrix weights = new Matrix(new double[][] {{1, 2},
+                                                   {3, 4}});
+
+        Matrix biases = new Matrix(new double[][] {{2},
+                                                  {4}});
+
+        Matrix input = new Matrix(new double[][] {{1},
+                                                   {3}});
+
+        Layer L1 = new Layer(weights, biases);
+
+        Matrix Z1 = L1.calculateZ(input);
+
+        Matrix A1 = L1.sigmoidActivation(Z1);
+
+        System.out.println(Z1.toString() + "\n");
+        System.out.println(A1.toString() + "\n");
+
+    }
+
+    private static void matrixTesting() {
+
+        // basic test matrices
+        Matrix testM1 = new Matrix(3, 3);
+        Matrix testM2 = new Matrix(new double[][] {{1, 2, 3},
+                                                  {4, 5, 6},
+                                                  {7, 8, 9}});
+        Matrix testM3 = new Matrix(new double[][] {{1, 2},
+                                                  {3, 4}});
 
         // print basic operations 
         System.out.println("Basic matrices ----------");
@@ -76,7 +105,7 @@ class Main {
         } else {
             // check everything is correct
             boolean allCorrect = true;
-            float expected = bigMul.getValueAt(0, 0);
+            double expected = bigMul.getValueAt(0, 0);
             for (int i = 0; i < bigMul.getHeight(); i++) {
                 for (int j = 0; j < bigMul.getWidth(); j++) {
                     if (bigMul.getValueAt(i, j) != expected) {

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 class Matrix {
 
     private static short DEBUG = 2;
-    private static int MAX_THREADS = 3;
+    private static int MAX_THREADS = 5;
 
     // the first bracket shall refer to a row 
     // the second bracket shall refer to a column
@@ -17,7 +17,7 @@ class Matrix {
     // i traverses the matrix vertically downward and 
     // j traverses the matrix horizontally rightward 
     // therefore, indexing is referred to by matrix[i][j] in code
-    private float[][] values; 
+    private double[][] values; 
 
     // init a matrix with nothing
     public Matrix() {
@@ -25,20 +25,20 @@ class Matrix {
     }
     
     // init a matrix m x n with selected values
-    public Matrix(float[][] values) {
+    public Matrix(double[][] values) {
         this.setValues(values);
     }
 
     // init a matrix m x n with all zeros
     // I don't want users to have access to a matrix with an array of null values
     public Matrix(int height, int width) {
-        float[][] values = fillAllZeros(new float[height][width]);
+        double[][] values = fillAllZeros(new double[height][width]);
         this.setValues(values);
     }
 
     // this is just to initialize a "blank" array for a new matrix
     // not to be used elsewhere
-    private static float[][] fillAllZeros(float[][] valuesArray) {
+    private static double[][] fillAllZeros(double[][] valuesArray) {
         for (int i = 0; i < valuesArray.length; i++) {
             for (int j = 0; j < valuesArray[0].length; j++) {
                 valuesArray[i][j] = 0;
@@ -48,16 +48,16 @@ class Matrix {
     }
 
     // accessors and mutators 
-    public float[][] getValues() {
+    public double[][] getValues() {
         return this.values;
     }
 
-    public float getValueAt(int i, int j) {
+    public double getValueAt(int i, int j) {
         return this.values[i][j];
     }
 
     public Matrix getRow(int i) {
-        return new Matrix(new float[][] {this.values[i]});
+        return new Matrix(new double[][] {this.values[i]});
     }
 
     public Matrix getColumn(int j) {
@@ -68,7 +68,7 @@ class Matrix {
         return output;
     }
     
-    public void setValues(float[][] values) {
+    public void setValues(double[][] values) {
         // ensure the rows are all the same length 
         // a jagged 2D array is not a matrix! 
         int standardLength = values[0].length;
@@ -87,7 +87,7 @@ class Matrix {
         this.values = values;
     }
 
-    public void setValueAt(float value, int i, int j) {
+    public void setValueAt(double value, int i, int j) {
         this.values[i][j] = value;
     }
 
@@ -159,7 +159,7 @@ class Matrix {
 
     }
 
-    public float dotProduct(Matrix other) throws MatrixException {
+    public double dotProduct(Matrix other) throws MatrixException {
 
         if (DEBUG >= 5) {
             System.out.println("Dotting left matrix: \n" + this.toString());
@@ -173,7 +173,7 @@ class Matrix {
 
             if (this.getWidth() == other.getHeight()) {
 
-                float product = 0f;
+                double product = 0f;
 
                 for (int i = 0; i < other.getHeight(); i++) {
                     product += this.getValueAt(0, i) * other.getValueAt(i, 0);
@@ -220,7 +220,7 @@ class Matrix {
             try {
 
                 // dot product to set the value at i, j
-                float value = this.left.getRow(this.i).dotProduct(this.right.getColumn(this.j));
+                double value = this.left.getRow(this.i).dotProduct(this.right.getColumn(this.j));
                 product.setValueAt(value, this.i, this.j);
 
                 if (DEBUG >= 3) {
