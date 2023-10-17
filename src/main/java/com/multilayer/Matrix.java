@@ -144,7 +144,7 @@ class Matrix {
                 }
             }
             output += "]";
-            if (i != this.getHeight()) {
+            if (i != this.getHeight() - 1) {
                 output += "\n";
             }
         }
