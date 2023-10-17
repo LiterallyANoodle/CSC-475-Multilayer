@@ -2,7 +2,7 @@ package com.multilayer;
 
 public class NeuralNetwork {
 
-    private int DEBUG = 0;
+    private int DEBUG = 1;
     
     private int inputSize;
     private Layer[] layers;
@@ -118,17 +118,23 @@ public class NeuralNetwork {
 
         // randomize training set and divide into equal minibatches 
         // for the toy example, this is just the passed in trainingData in order
-        for (int i = 0; i < trainingData.length / miniBatchSize; i++) {
-            Matrix[][] miniBatch = new Matrix[miniBatchSize][2];
-            for (int j = 0; j < (trainingData.length / miniBatchSize); j++) {
-                for (int k = 0; k < miniBatchSize; k++) {
-                    miniBatch[j % miniBatchSize][k] = trainingData[j][k];
-                }
-            }
-            processMiniBatch(miniBatch, i);
-            for (int j = 0; j < trainingData.length; j++) {
-                System.out.println("Output of minibatch " + i + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j][0]) + "\n");
-            }
+
+        Matrix[][] miniBatch1 = new Matrix[2][2];
+        Matrix[][] miniBatch2 = new Matrix[2][2];
+
+        miniBatch1[0] = trainingData[0];
+        miniBatch1[1] = trainingData[1];
+        miniBatch2[0] = trainingData[2];
+        miniBatch2[1] = trainingData[3];
+
+        // just hard coding this for now to quick fix it 
+        processMiniBatch(miniBatch1, 0);
+        for (int j = 0; j < trainingData.length; j++) {
+            System.out.println("Output of minibatch " + 0 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j][0]) + "\n");
+        }
+        processMiniBatch(miniBatch2, 1);
+        for (int j = 0; j < trainingData.length; j++) {
+            System.out.println("Output of minibatch " + 1 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j][0]) + "\n");
         }
 
         System.out.println("Epoch " + epochNumber + " complete.");
@@ -141,6 +147,13 @@ public class NeuralNetwork {
     public void processMiniBatch(Matrix[][] trainingBatch, int miniBatchNumber) {
 
         System.out.println("Processing minibatch " + miniBatchNumber + "...");
+
+        if (DEBUG >= 1) {
+            System.out.println("Minibatch inputs 0:\n" + trainingBatch[0][0]);
+            System.out.println("Minibatch inputs 1:\n" + trainingBatch[1][0]);
+            System.out.println("Minibatch expected output 0:\n" + trainingBatch[0][1]);
+            System.out.println("Minibatch expected output 1:\n" + trainingBatch[1][1]);
+        }
 
         // keep a running sum of gradients of each type
         Matrix[] biasGradientSums = new Matrix[this.getDepth()];

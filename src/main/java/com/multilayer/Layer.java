@@ -162,6 +162,8 @@ public class Layer {
 
         return deltas.matrixMultiply(prevOutputTranspose);
 
+        // Matrix output = new Matrix();
+
     }
     
 }
