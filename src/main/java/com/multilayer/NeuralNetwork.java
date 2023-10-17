@@ -2,7 +2,7 @@ package com.multilayer;
 
 public class NeuralNetwork {
 
-    private int DEBUG = 4;
+    private int DEBUG = 0;
     
     private int inputSize;
     private Layer[] layers;
@@ -112,11 +112,22 @@ public class NeuralNetwork {
 
     }
 
-    public void stochasticGradientDescent(Matrix[][] trainingData, Matrix actual) {
+    public void stochasticGradientDescent(Matrix[][] trainingData, int miniBatchSize, int epochNumber) {
 
         // randomize training set and divide into equal minibatches 
-        // for the toy example, this is just the passed in trainingData
-        
+        // for the toy example, this is just the passed in trainingData in order
+        for (int i = 0; i < trainingData.length / miniBatchSize; i++) {
+            Matrix[][] miniBatch = new Matrix[miniBatchSize][2];
+            for (int j = 0; j < (trainingData.length / miniBatchSize); j++) {
+                for (int k = 0; k < miniBatchSize; k++) {
+                    miniBatch[j % miniBatchSize][k] = trainingData[j][k];
+                }
+            }
+            processMiniBatch(miniBatch);
+        }
+
+        System.out.println("Epoch " + epochNumber + " complete.");
+        System.out.println("Epoch Final Network: \n" + this);
         
     }
 
@@ -132,6 +143,9 @@ public class NeuralNetwork {
         // then grab gradients and sum as you go
         Matrix[][] gradients = null;
         for (int i = 0; i < trainingBatch.length; i++) {
+            if (DEBUG >= 2){
+                System.out.println("Input vector at i = " + i + "\n" + trainingBatch[i][0]);
+            }
             this.forwardPass(trainingBatch[i][0]);
             gradients = this.calculateTrainingCaseGradients(trainingBatch[i][1]);
 

@@ -1,6 +1,6 @@
 package com.multilayer;
 
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.concurrent.ExecutorService; 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -135,9 +135,16 @@ class Matrix {
     public String toString() {
         String output = "";
         for (int i = 0; i < this.getHeight(); i++) {
-            output += Arrays.toString(this.values[i]);
+            // output += Arrays.toString(this.values[i]); // He said in class not to use Arrays, so...... gotta make the inner string by hand
+            output += "[";
+            for (int j = 0; j < this.getWidth(); j++) {
+                output += this.getValueAt(i, j);
+                if (j != this.getWidth() - 1) {
+                    output += ", ";
+                }
+            }
             if (i != this.getHeight() - 1) {
-                output += "\n";
+                output += "]\n";
             }
         }
         return output;

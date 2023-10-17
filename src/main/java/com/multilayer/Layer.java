@@ -115,7 +115,7 @@ public class Layer {
     }
 
     public String toString() {
-        return this.getWeights().toString() + "\n + \n" + this.getBiases().toString();
+        return "Weights: \n" + this.getWeights().toString() + "\n + \nBiases:\n" + this.getBiases().toString();
     }
 
     // Layer is agnostic to its position in the network

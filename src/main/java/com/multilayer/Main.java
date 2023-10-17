@@ -19,8 +19,6 @@ class Main {
         Matrix L2TestBiases = new Matrix(new double[][] {{0.16},
                                                         {-0.46}});
 
-        double testLearningRate = 10f;
-
         // print assignment matrices 
         System.out.println("Assignment matrices ----------");
         System.out.println(L1TestWeights.toString() + "\n");
@@ -95,7 +93,12 @@ class Main {
         testMinibatch[0] = trainingData[0];
         testMinibatch[1] = trainingData[1];
 
-        testNet.processMiniBatch(testMinibatch);
+        for (int epoch = 1; epoch < 7; epoch++) {
+            testNet.stochasticGradientDescent(trainingData, 2, epoch);
+        }
+        for (int i = 0; i < trainingData.length; i++) {
+            System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + testNet.forwardPass(trainingData[i][0]) + "\n");
+        }
 
     }
 
