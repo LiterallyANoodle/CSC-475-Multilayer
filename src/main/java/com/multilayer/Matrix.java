@@ -143,9 +143,7 @@ class Matrix {
                     output += ", ";
                 }
             }
-            if (i != this.getHeight() - 1) {
-                output += "]\n";
-            }
+            output += "]\n";
         }
         return output;
     }
