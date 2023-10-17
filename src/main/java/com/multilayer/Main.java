@@ -42,10 +42,10 @@ class Main {
         testNet.getLayer(2).setWeights(L2TestWeights);
         testNet.getLayer(2).setBiases(L2TestBiases);
 
-        System.out.println(testNet.toString());
+        // System.out.println(testNet.toString());
 
         Matrix testResult1 = testNet.forwardPass(testInput1);
-        System.out.println("Test Foward Pass Result: \n" + testResult1);
+        // System.out.println("Test Foward Pass Result: \n" + testResult1);
 
         // training set for toy network: 
         // array of 4 training pairs 
