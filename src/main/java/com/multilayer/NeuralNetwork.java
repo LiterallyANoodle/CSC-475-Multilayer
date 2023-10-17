@@ -2,7 +2,7 @@ package com.multilayer;
 
 public class NeuralNetwork {
 
-    private int DEBUG = 1;
+    private int DEBUG = 0;
     
     private int inputSize;
     private Layer[] layers;
