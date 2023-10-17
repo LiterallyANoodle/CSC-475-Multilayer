@@ -93,7 +93,7 @@ class Main {
         testMinibatch[0] = trainingData[0];
         testMinibatch[1] = trainingData[1];
 
-        for (int epoch = 1; epoch < 37; epoch++) {
+        for (int epoch = 1; epoch < 7; epoch++) {
             testNet.stochasticGradientDescent(trainingData, 2, epoch);
         }
         for (int i = 0; i < trainingData.length; i++) {

@@ -29,5 +29,9 @@ replay_pid*
 # Ignore Gradle build output directory
 build
 
+# ignore terminal redirect
+out.txt
+output.txt
+
 # ignore vscode metadata
 .vscode
