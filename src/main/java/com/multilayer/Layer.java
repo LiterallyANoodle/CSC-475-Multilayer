@@ -27,9 +27,16 @@ public class Layer {
         return this.size;
     }
 
-    // size is determined by the matrixes inputted, and therefore cannot be set from outside
+    // size is determined by the matrixes inputted, and therefore cannot be set from outside and must be private
     private void setSize(int size) {
-        this.size = size;
+        try {
+            if (size < 0) {
+                throw new NeuralNetException("Layer size cannot be less than 0.");
+            }
+            this.size = size;
+        } catch (NeuralNetException e) {
+            System.out.println(e.toString());
+        }
     }
 
     public Matrix getWeights() {
@@ -99,6 +106,61 @@ public class Layer {
         }
 
         return output;
+
+    }
+
+    // calculate Z and activate in a single method 
+    public Matrix calculateSigmoidForwardPass(Matrix input) {
+        return this.sigmoidActivation(this.calculateZ(input));
+    }
+
+    public String toString() {
+        return this.getWeights().toString() + "\n + \n" + this.getBiases().toString();
+    }
+
+    // Layer is agnostic to its position in the network
+    // that knowledge is only held by the neural network that it is part of 
+    public Matrix calculateFinalLayerDelta(Matrix expected, Matrix actual) {
+
+        Matrix deltas = new Matrix(this.getSize(), 1); // column vector for delta on this layer 
+
+        // run equation #1 at each location 
+        for (int j = 0; j < deltas.getHeight(); j++) {
+            double value = (actual.getValueAt(j, 0) - expected.getValueAt(j, 0)) * actual.getValueAt(j, 0) * (1 - actual.getValueAt(j, 0));
+            deltas.setValueAt(value, j, 0);
+        }
+
+        return deltas;
+
+    }
+
+    public Matrix calculateHiddenLayerDelta(Matrix actual, Matrix nextDeltas, Matrix nextWeights) {
+        
+        Matrix deltas = new Matrix(this.getSize(), 1);
+
+        for (int j = 0; j < deltas.getHeight(); j++) {
+            double rightHandSide = actual.getValueAt(j, 0) * (1 - actual.getValueAt(j, 0));
+            double leftHandSide = nextWeights.getColumn(j).transpose().dotProduct(nextDeltas);
+
+            deltas.setValueAt(leftHandSide * rightHandSide, j, 0);
+        }
+
+        return deltas;
+
+    }
+
+    // kind of a waste of memory and time, but doing this for completeness' sake 
+    public Matrix calculateBiasGradientFromDelta(Matrix deltas) {
+        return new Matrix(deltas);
+    }
+
+    public Matrix calculateWeightGradientFromDelta(Matrix deltas, Matrix prevOutput) {
+
+        // Equivalent to DA^T
+        
+        Matrix prevOutputTranspose = prevOutput.transpose();
+
+        return deltas.matrixMultiply(prevOutputTranspose);
 
     }
     

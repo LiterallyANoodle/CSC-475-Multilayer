@@ -36,6 +36,17 @@ class Matrix {
         this.setValues(values);
     }
 
+    // copy constructor 
+    public Matrix(Matrix other) {
+        double[][] values = new double[other.getHeight()][other.getWidth()];
+        for (int i = 0; i < other.getHeight(); i ++) {
+            for (int j = 0; j < other.getWidth(); j++) {
+                values[i][j] = other.getValueAt(i, j);
+            }
+        }
+        this.values = values;
+    }
+
     // this is just to initialize a "blank" array for a new matrix
     // not to be used elsewhere
     private static double[][] fillAllZeros(double[][] valuesArray) {
@@ -159,6 +170,33 @@ class Matrix {
 
     }
 
+    public Matrix subtract(Matrix other) {
+
+        try {
+
+            if (this.isSameDimensionsAs(other)) {
+
+                Matrix sum = new Matrix(this.getHeight(), this.getWidth());
+
+                for (int i = 0; i < this.getHeight(); i++) {
+                    for (int j = 0; j < this.getWidth(); j++) {
+                        sum.setValueAt(this.getValueAt(i, j) - other.getValueAt(i, j), i, j);
+                    }
+                }
+
+                return sum;
+            } else {
+                throw new MatrixException("Added matrices are not the same dimensions.");
+            }
+            
+        } catch (MatrixException e) {
+            System.out.println(e.toString());
+        }
+
+        return null;
+
+    }
+
     public double dotProduct(Matrix other) throws MatrixException {
 
         if (DEBUG >= 5) {
@@ -193,6 +231,18 @@ class Matrix {
             throw new MatrixException("Dot product can only be performed on a row vector against a column vector. Did you mean to multiply them the other way around?");
         }
 
+    }
+
+    public Matrix transpose() {
+        Matrix output = new Matrix(this.getWidth(), this.getHeight());
+
+        for (int i = 0; i < this.getHeight(); i++) {
+            for (int j = 0; j < this.getWidth(); j++) {
+                output.setValueAt(this.getValueAt(i, j), j, i);
+            }
+        }
+
+        return output;
     }
 
     // subclass to assist in multiplication
@@ -277,6 +327,20 @@ class Matrix {
         }
 
         return null;
+
+    }
+
+    public Matrix scalarMultiply(double scalar) {
+
+        Matrix output = new Matrix(this);
+
+        for (int i = 0; i < output.getHeight(); i++) {
+            for (int j = 0; j < output.getWidth(); j++) {
+                output.setValueAt(scalar * output.getValueAt(i, j), i, j);
+            }
+        }
+
+        return output;
 
     }
 
