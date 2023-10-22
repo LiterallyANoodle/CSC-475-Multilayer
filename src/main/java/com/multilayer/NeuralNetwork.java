@@ -112,15 +112,15 @@ public class NeuralNetwork {
 
     }
 
-    public void stochasticGradientDescent(Matrix[][] trainingData, int miniBatchSize, int epochNumber) {
+    public void stochasticGradientDescent(DataPair[] trainingData, int miniBatchSize, int epochNumber) {
 
         System.out.println("Begin epoch " + epochNumber);
 
         // randomize training set and divide into equal minibatches 
         // for the toy example, this is just the passed in trainingData in order
 
-        Matrix[][] miniBatch1 = new Matrix[2][2];
-        Matrix[][] miniBatch2 = new Matrix[2][2];
+        DataPair[] miniBatch1 = new DataPair[2];
+        DataPair[] miniBatch2 = new DataPair[2];
 
         miniBatch1[0] = trainingData[0];
         miniBatch1[1] = trainingData[1];
@@ -130,11 +130,11 @@ public class NeuralNetwork {
         // just hard coding this for now to quick fix it 
         processMiniBatch(miniBatch1, 0);
         for (int j = 0; j < trainingData.length; j++) {
-            System.out.println("Output of minibatch " + 0 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j][0]) + "\n");
+            System.out.println("Output of minibatch " + 0 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j].getInputData()) + "\n");
         }
         processMiniBatch(miniBatch2, 1);
         for (int j = 0; j < trainingData.length; j++) {
-            System.out.println("Output of minibatch " + 1 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j][0]) + "\n");
+            System.out.println("Output of minibatch " + 1 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j].getInputData()) + "\n");
         }
 
         System.out.println("Epoch " + epochNumber + " complete.");
@@ -144,15 +144,15 @@ public class NeuralNetwork {
 
     // expects training batch to be a set of pairs of length i
     // each pair is [input, expected output]
-    public void processMiniBatch(Matrix[][] trainingBatch, int miniBatchNumber) {
+    public void processMiniBatch(DataPair[] trainingBatch, int miniBatchNumber) {
 
         System.out.println("Processing minibatch " + miniBatchNumber + "...");
 
         if (DEBUG >= 1) {
-            System.out.println("Minibatch inputs 0:\n" + trainingBatch[0][0]);
-            System.out.println("Minibatch inputs 1:\n" + trainingBatch[1][0]);
-            System.out.println("Minibatch expected output 0:\n" + trainingBatch[0][1]);
-            System.out.println("Minibatch expected output 1:\n" + trainingBatch[1][1]);
+            System.out.println("Minibatch inputs 0:\n" + trainingBatch[0].getInputData());
+            System.out.println("Minibatch inputs 1:\n" + trainingBatch[1].getInputData());
+            System.out.println("Minibatch expected output 0:\n" + trainingBatch[0].getExpectedOutput());
+            System.out.println("Minibatch expected output 1:\n" + trainingBatch[1].getExpectedOutput());
         }
 
         // keep a running sum of gradients of each type
@@ -164,10 +164,10 @@ public class NeuralNetwork {
         Matrix[][] gradients = null;
         for (int i = 0; i < trainingBatch.length; i++) {
             if (DEBUG >= 2){
-                System.out.println("Input vector at i = " + i + "\n" + trainingBatch[i][0]);
+                System.out.println("Input vector at i = " + i + "\n" + trainingBatch[i].getInputData());
             }
-            this.forwardPass(trainingBatch[i][0]);
-            gradients = this.calculateTrainingCaseGradients(trainingBatch[i][1]);
+            this.forwardPass(trainingBatch[i].getInputData());
+            gradients = this.calculateTrainingCaseGradients(trainingBatch[i].getExpectedOutput());
 
             if (DEBUG >= 5) {
                 System.out.println("Top bias gradient: \n" + gradients[1][0]);

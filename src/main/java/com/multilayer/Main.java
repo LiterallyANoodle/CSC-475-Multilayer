@@ -1,7 +1,8 @@
 package com.multilayer;
 
-import java.util.concurrent.ExecutorService; 
-import java.util.concurrent.Executors;
+import java.io.FileNotFoundException;
+
+import javax.xml.crypto.Data;
 
 class Main {
 
@@ -50,54 +51,31 @@ class Main {
         // training set for toy network: 
         // array of 4 training pairs 
         // each pair contains the input vector and expected output vector 
-        Matrix[][] trainingData = new Matrix[4][2];
+        DataPair[] trainingData = new DataPair[4];
 
-        // input vector 1
-        trainingData[0][0] = new Matrix(new double[][] {{0},
-                                                        {1},
-                                                        {0},
-                                                        {1}});
-        // output vector 1
-        trainingData[0][1] = new Matrix(new double[][] {{0},
-                                                        {1}});
+        // input pair 1
+        trainingData[0] = new DataPair(new Matrix(new double[][] {{0}, {1}, {0}, {1}}), new Matrix(new double[][] {{0}, {1}}));
 
-        // input vector 2
-        trainingData[1][0] = new Matrix(new double[][] {{1},
-                                                        {0},
-                                                        {1},
-                                                        {0}});
-        // output vector 2
-        trainingData[1][1] = new Matrix(new double[][] {{1},
-                                                        {0}});
+        // input pair 2
+        trainingData[1] = new DataPair(new Matrix(new double[][] {{1}, {0}, {1}, {0}}), new Matrix(new double[][] {{1}, {0}}));
 
-        // input vector 3
-        trainingData[2][0] = new Matrix(new double[][] {{0},
-                                                        {0},
-                                                        {1},
-                                                        {1}});
-        // output vector 3
-        trainingData[2][1] = new Matrix(new double[][] {{0},
-                                                        {1}});
+        // input pair 3
+        trainingData[2] = new DataPair(new Matrix(new double[][] {{0}, {0}, {1}, {1}}), new Matrix(new double[][] {{0}, {1}}));
+        
+        // input pair 4
+        trainingData[3] = new DataPair(new Matrix(new double[][] {{1}, {1}, {0}, {0}}), new Matrix(new double[][] {{1}, {0}}));
 
-        // input vector 4
-        trainingData[3][0] = new Matrix(new double[][] {{1},
-                                                        {1},
-                                                        {0},
-                                                        {0}});
-        // output vector 4
-        trainingData[3][1] = new Matrix(new double[][] {{1},
-                                                        {0}});
-
-        Matrix[][] testMinibatch = new Matrix[2][2];
-
-        testMinibatch[0] = trainingData[0];
-        testMinibatch[1] = trainingData[1];
-
-        for (int epoch = 1; epoch < 7; epoch++) {
-            testNet.stochasticGradientDescent(trainingData, 2, epoch);
-        }
-        for (int i = 0; i < trainingData.length; i++) {
-            System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + testNet.forwardPass(trainingData[i][0]) + "\n");
+        // for (int epoch = 1; epoch < 7; epoch++) {
+        //     testNet.stochasticGradientDescent(trainingData, 2, epoch);
+        // }
+        // for (int i = 0; i < trainingData.length; i++) {
+        //     System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + testNet.forwardPass(trainingData[i].getInputData()) + "\n");
+        // }
+        
+        try {
+            DataSetHandler.readDataPair(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv");
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
         }
 
     }

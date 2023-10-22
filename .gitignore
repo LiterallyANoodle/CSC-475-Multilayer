@@ -33,5 +33,8 @@ build
 out.txt
 output.txt
 
+# ignore giant mnist files
+mnist*.csv
+
 # ignore vscode metadata
 .vscode
