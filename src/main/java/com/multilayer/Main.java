@@ -1,12 +1,157 @@
 package com.multilayer;
 
 import java.io.FileNotFoundException;
-
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService; 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 class Main {
 
+    public static int MAX_THREADS = 3;
+
     public static void main(String[] args) {
+
+        System.out.println("fuck?" + 60_000/2);
+
+        // get training data
+        // DataPair[] trainingSet = null;
+        // try {
+        //     trainingSet = DataSetHandler.readAllDataPairs(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv", 60_000);
+        // } catch (FileNotFoundException e) {
+        //     System.out.println(e);
+        // }
+        
+        // silly little experiment about randomizing the sequence using race conditions :) 
+        // new Main().fafo();
+
+        System.out.println(randomPermutation(500));
+        
+    }
+
+    // this randomizer algorithm was inspired by Heap's algorithm: https://en.wikipedia.org/wiki/Heap%27s_algorithm
+    // the key difference is that there's no swapping taking place 
+    // also a random recursive walk is taken down the tree that hits every leaf (integer) in a random order and appends them to the list
+    // this definitely has some bias but also no collisions -- its good enough for us
+    private static ArrayList<Integer> randomPermutation(int size) {
+
+        ArrayList<Integer> randomIndexes = new ArrayList<Integer>();
+        Random rand = new Random(System.nanoTime());
+
+        randomPermutationHelper(randomIndexes, rand, 0, size);
+
+        return randomIndexes;
+
+    }
+
+    private static void randomPermutationHelper(ArrayList<Integer> list, Random rand, int start, int end) {
+
+        // System.out.println("Start = " + start + " , End = " + end);
+
+        int walk = rand.nextInt(2);
+
+        if (end - start == 1) {
+            if (walk == 1) {
+                list.add(start);
+                list.add(end);
+            } else {
+                list.add(end);
+                list.add(start);
+            }
+            // System.out.println("Returning...");
+            return;
+        }
+
+        if (walk == 1) {
+            // System.out.println("Walk 1");
+            randomPermutationHelper(list, rand, start, ((end - start) / 2) + start);
+            randomPermutationHelper(list, rand, ((end - start) / 2) + start, end);
+        } else {
+            // System.out.println("Walk 0");
+            randomPermutationHelper(list, rand, ((end - start) / 2) + start, end);
+            randomPermutationHelper(list, rand, start, ((end - start) / 2) + start);
+        }
+
+    }
+
+    // silly little experiment about randomizing the sequences using race conditions :) 
+    private void fafo() {
+
+        // abuse race conditions to generate the random number sequence (very silly teehee): 
+        ArrayList<Integer> randIndexes = new ArrayList<Integer>();
+        ExecutorService superPool = Executors.newFixedThreadPool(MAX_THREADS);
+        ExecutorService subPool = Executors.newFixedThreadPool(MAX_THREADS);
+        RandomizeTask[] tasks = new RandomizeTask[500];
+        for (int i = 0; i < 500; i++) {
+            tasks[i] = new RandomizeTask(i, randIndexes);
+        }
+        superPool.execute(new RandomizeSuperTask(subPool, tasks, 0, 100));
+        superPool.execute(new RandomizeSuperTask(subPool, tasks, 100, 200));
+        superPool.execute(new RandomizeSuperTask(subPool, tasks, 200, 300));
+        superPool.execute(new RandomizeSuperTask(subPool, tasks, 300, 400));
+        superPool.execute(new RandomizeSuperTask(subPool, tasks, 400, 500));
+        try {
+            superPool.shutdown();
+            superPool.awaitTermination(120, TimeUnit.SECONDS);
+            subPool.shutdown();
+            subPool.awaitTermination(120, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        System.out.println(randIndexes);
+
+    }
+
+    // silly little experiment about randomizing the sequences using race conditions :) 
+    private class RandomizeSuperTask implements Runnable {
+
+        private ExecutorService pool;
+        private RandomizeTask[] tasks;
+        private int rangeStart;
+        private int rangeEnd;
+
+        public RandomizeSuperTask(ExecutorService pool, RandomizeTask[] tasks, int rangeStart, int rangeEnd) {
+            super();
+            this.pool = pool;
+            this.tasks = tasks;
+            this.rangeStart = rangeStart;
+            this.rangeEnd = rangeEnd;
+        }
+
+        @Override
+        public void run() {
+            for (int i = rangeStart; i < rangeEnd; i++) {
+                pool.execute(tasks[i]);
+            }
+        }
+
+    }
+
+    // silly little experiment about randomizing the sequences using race conditions :) 
+    private class RandomizeTask implements Runnable {
+
+        private int i;
+        private ArrayList<Integer> randList;
+
+        public RandomizeTask(int i, ArrayList<Integer> randList) {
+            super();
+            this.i = i;
+            this.randList = randList;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(2);
+            } catch (Exception e) {}
+            this.randList.add(i);
+        }
+
+    }
+
+    private static void neuralNetTesting() {
 
         // Standardized matrices from assignment pdf: 
         Matrix L1TestWeights = new Matrix(new double[][] {{-0.21, 0.72, -0.25, 1}, 
@@ -71,12 +216,6 @@ class Main {
         // for (int i = 0; i < trainingData.length; i++) {
         //     System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + testNet.forwardPass(trainingData[i].getInputData()) + "\n");
         // }
-        
-        try {
-            DataSetHandler.readDataPair(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv");
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        }
 
     }
 
