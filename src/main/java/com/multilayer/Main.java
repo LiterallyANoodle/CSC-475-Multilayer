@@ -11,19 +11,29 @@ class Main {
 
     public static int MAX_THREADS = 3;
 
+    public static int TRAINING_DATA_SIZE = 60_000;
+    public static int TESTING_DATA_SIZE = 10_000;
+
+    public static String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
+    public static String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
+
     public static void main(String[] args) {
 
         // create network of defined shape
-        NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
+        // NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
 
-        long time = System.nanoTime();
-        trainNetwork(mnist, 5);
-        time = System.nanoTime() - time;
-        System.out.println("Took: " + time / 1000000 + "ms");
+        // long time = System.nanoTime();
+        // trainNetwork(mnist, 5, TRAINING_DATA_PATH);
+        // time = System.nanoTime() - time;
+        // System.out.println("Took: " + time / 1000000 + "ms");
+
+        Menu menu = new Menu();
+
+        menu.start();
         
     }
 
-    private static void trainNetwork(NeuralNetwork network, int epochs) {
+    private static void trainNetwork(NeuralNetwork network, int epochs, String trainDataPath) {
 
         // off by one
         epochs = epochs++;
@@ -31,7 +41,7 @@ class Main {
         // get training data
         DataPair[] trainingSet = null;
         try {
-            trainingSet = DataSetHandler.readAllDataPairs(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv", 60_000);
+            trainingSet = DataSetHandler.readAllDataPairs(trainDataPath, 60_000);
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }
@@ -41,7 +51,7 @@ class Main {
 
         for (int epoch = 1; epoch < 2; epoch++) {
             network.setEpoch(epoch);
-            network.stochasticGradientDescent(trainingSet, randomIndexes, 2, epoch);
+            network.stochasticGradientDescent(trainingSet, 2);
         }
 
         for (int i = 0; i < 20; i++) {

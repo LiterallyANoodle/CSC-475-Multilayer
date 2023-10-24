@@ -1,5 +1,7 @@
 package com.multilayer;
 
+import java.util.Random;
+
 public class NeuralNetwork {
 
     private static int DEBUG = 0;
@@ -8,7 +10,7 @@ public class NeuralNetwork {
     private Layer[] layers;
 
     private Matrix[] outputHistory;
-    private double stepSize = 10; // "eta"
+    private double stepSize; // "eta"
 
     private int epoch;
 
@@ -18,6 +20,7 @@ public class NeuralNetwork {
         this.inputSize = inputSize;
         this.layers = new Layer[layerSizes.length];
         this.stepSize = stepSize;
+        this.epoch = 0;
         for (int i = 0; i < layerSizes.length; i++) {
             if (i != 0) {
                 this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1], 10);
@@ -139,10 +142,14 @@ public class NeuralNetwork {
 
     }
 
-    public void stochasticGradientDescent(DataPair[] trainingData, int[] randomIndexes, int miniBatchSize, int epochNumber) {
+    public void stochasticGradientDescent(DataPair[] trainingData, int miniBatchSize) {
+
+        this.setEpoch(this.getEpoch() + 1);
+
+        int[] randomIndexes = randomPermutation(trainingData.length);
 
         if (DEBUG >= 1) {
-            System.out.println("Begin epoch " + epochNumber);
+            System.out.println("Begin epoch " + this.getEpoch());
         }
 
         // randomize training set and divide into equal minibatches 
@@ -160,7 +167,7 @@ public class NeuralNetwork {
         }
 
         if (DEBUG >= 1) {
-            System.out.println("Epoch " + epochNumber + " complete.");
+            System.out.println("Epoch " + this.getEpoch() + " complete.");
         }
         
     }
@@ -252,6 +259,34 @@ public class NeuralNetwork {
         }
 
         return new Matrix[][] {weightGradients, biasGradients};
+
+    }
+
+    // naiive method of making a random permutation
+    private static int[] randomPermutation(int size) {
+
+        Random rand = new Random(System.nanoTime());
+
+        int[] randArr = new int[size];
+        boolean[] tracker = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
+
+            while (true) {
+
+                int attempt = rand.nextInt(size);
+
+                if (tracker[attempt] == false) {
+                    randArr[i] = attempt;
+                    tracker[attempt] = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        return randArr;
 
     }
 
