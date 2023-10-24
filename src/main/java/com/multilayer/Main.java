@@ -13,39 +13,68 @@ class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("fuck?" + 60_000/2);
-
         // get training data
-        // DataPair[] trainingSet = null;
-        // try {
-        //     trainingSet = DataSetHandler.readAllDataPairs(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv", 60_000);
-        // } catch (FileNotFoundException e) {
-        //     System.out.println(e);
-        // }
+        DataPair[] trainingSet = null;
+        try {
+            trainingSet = DataSetHandler.readAllDataPairs(".\\src\\main\\java\\com\\multilayer\\mnist_train.csv", 60_000);
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        }
         
         // silly little experiment about randomizing the sequence using race conditions :) 
         // new Main().fafo();
 
-        System.out.println(randomPermutation(500));
+        // make random sequence of indexes 
+        int[] randomIndexes = randomPermutation(60_000);
         
+    }
+
+    // naiive method of making a random permutation
+    private static int[] randomPermutation(int size) {
+
+        Random rand = new Random(System.nanoTime());
+
+        int[] randArr = new int[size];
+        boolean[] tracker = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
+
+            while (true) {
+
+                int attempt = rand.nextInt(size);
+
+                if (tracker[attempt] == false) {
+                    randArr[i] = attempt;
+                    tracker[attempt] = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        return randArr;
+
     }
 
     // this randomizer algorithm was inspired by Heap's algorithm: https://en.wikipedia.org/wiki/Heap%27s_algorithm
     // the key difference is that there's no swapping taking place 
     // also a random recursive walk is taken down the tree that hits every leaf (integer) in a random order and appends them to the list
     // this definitely has some bias but also no collisions -- its good enough for us
-    private static ArrayList<Integer> randomPermutation(int size) {
+
+    // so this doesn't work, im just going to use the naiive method 
+    private static ArrayList<Integer> randomPermutationWalk(int size) {
 
         ArrayList<Integer> randomIndexes = new ArrayList<Integer>();
         Random rand = new Random(System.nanoTime());
 
-        randomPermutationHelper(randomIndexes, rand, 0, size);
+        randomPermutationWalkHelper(randomIndexes, rand, 0, size);
 
         return randomIndexes;
 
     }
 
-    private static void randomPermutationHelper(ArrayList<Integer> list, Random rand, int start, int end) {
+    private static void randomPermutationWalkHelper(ArrayList<Integer> list, Random rand, int start, int end) {
 
         // System.out.println("Start = " + start + " , End = " + end);
 
@@ -65,12 +94,12 @@ class Main {
 
         if (walk == 1) {
             // System.out.println("Walk 1");
-            randomPermutationHelper(list, rand, start, ((end - start) / 2) + start);
-            randomPermutationHelper(list, rand, ((end - start) / 2) + start, end);
+            randomPermutationWalkHelper(list, rand, start, ((end - start) / 2) + start);
+            randomPermutationWalkHelper(list, rand, ((end - start) / 2) + start, end);
         } else {
             // System.out.println("Walk 0");
-            randomPermutationHelper(list, rand, ((end - start) / 2) + start, end);
-            randomPermutationHelper(list, rand, start, ((end - start) / 2) + start);
+            randomPermutationWalkHelper(list, rand, ((end - start) / 2) + start, end);
+            randomPermutationWalkHelper(list, rand, start, ((end - start) / 2) + start);
         }
 
     }
