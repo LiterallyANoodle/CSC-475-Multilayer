@@ -26,6 +26,11 @@ class Main {
 
         // make random sequence of indexes 
         int[] randomIndexes = randomPermutation(60_000);
+
+        // create network of defined shape
+        NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
+
+        
         
     }
 
@@ -210,7 +215,7 @@ class Main {
                                                       {0},
                                                       {1}});
 
-        NeuralNetwork testNet = new NeuralNetwork(4, new int[] {3, 2});
+        NeuralNetwork testNet = new NeuralNetwork(4, new int[] {3, 2}, 10);
 
         testNet.getLayer(1).setWeights(L1TestWeights);
         testNet.getLayer(1).setBiases(L1TestBiases);

@@ -1,5 +1,7 @@
 package com.multilayer;
 
+import javax.xml.crypto.Data;
+
 public class NeuralNetwork {
 
     private int DEBUG = 0;
@@ -12,9 +14,10 @@ public class NeuralNetwork {
 
     // instantiate the network to accept input of a certain size 
     // instantiate empty layers from an array which defines their sizes
-    public NeuralNetwork(int inputSize, int[] layerSizes) {
+    public NeuralNetwork(int inputSize, int[] layerSizes, int stepSize) {
         this.inputSize = inputSize;
         this.layers = new Layer[layerSizes.length];
+        this.stepSize = stepSize;
         for (int i = 0; i < layerSizes.length; i++) {
             if (i != 0) {
                 this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1]);
@@ -112,33 +115,29 @@ public class NeuralNetwork {
 
     }
 
-    public void stochasticGradientDescent(DataPair[] trainingData, int miniBatchSize, int epochNumber) {
+    public void stochasticGradientDescent(DataPair[] trainingData, int[] randomIndexes, int miniBatchSize, int epochNumber) {
 
-        System.out.println("Begin epoch " + epochNumber);
+        if (DEBUG >= 1) {
+            System.out.println("Begin epoch " + epochNumber);
+        }
 
         // randomize training set and divide into equal minibatches 
-        // for the toy example, this is just the passed in trainingData in order
 
-        DataPair[] miniBatch1 = new DataPair[2];
-        DataPair[] miniBatch2 = new DataPair[2];
+        DataPair[] miniBatch = new DataPair[miniBatchSize];
 
-        miniBatch1[0] = trainingData[0];
-        miniBatch1[1] = trainingData[1];
-        miniBatch2[0] = trainingData[2];
-        miniBatch2[1] = trainingData[3];
+        for (int batchNum = 0; batchNum < trainingData.length / miniBatchSize; batchNum++) {
 
-        // just hard coding this for now to quick fix it 
-        processMiniBatch(miniBatch1, 0);
-        for (int j = 0; j < trainingData.length; j++) {
-            System.out.println("Output of minibatch " + 0 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j].getInputData()) + "\n");
-        }
-        processMiniBatch(miniBatch2, 1);
-        for (int j = 0; j < trainingData.length; j++) {
-            System.out.println("Output of minibatch " + 1 + " with Training data " + (j+1) + ": \n" + this.forwardPass(trainingData[j].getInputData()) + "\n");
+            // build current minibatch
+            for (int j = 0; j < miniBatchSize; j++) {
+                miniBatch[j] = trainingData[randomIndexes[(batchNum * miniBatchSize) + j]]; // access the training data according to random indexes
+            }
+            processMiniBatch(miniBatch, batchNum);
+
         }
 
-        System.out.println("Epoch " + epochNumber + " complete.");
-        // System.out.println("Epoch Final Network: \n" + this);
+        if (DEBUG >= 1) {
+            System.out.println("Epoch " + epochNumber + " complete.");
+        }
         
     }
 
