@@ -69,10 +69,10 @@ public class Menu {
         
         int response = 0;
         this.clearConsole();
-        do {
+        while (true) {
 
             this.printList(labels);
-            System.out.print(">>>");
+            System.out.print(">>> ");
 
             response = this.getInputInt();
             if (response < vtable.length && response >= 0) {
@@ -81,7 +81,7 @@ public class Menu {
 
             System.out.println(ANSI_RED + "That is not a valid item in the list!" + ANSI_WHITE + " Please try again: ");
 
-        } while (true);
+        } 
 
         vtable[response].invoke();
 
@@ -102,10 +102,10 @@ public class Menu {
         
         int response = 0;
         this.clearConsole();
-        do {
+        while (true) {
 
             this.printList(labels);
-            System.out.print(">>>");
+            System.out.print(">>> ");
 
             response = this.getInputInt();
             if (response < vtable.length && response >= 0) {
@@ -114,7 +114,7 @@ public class Menu {
 
             System.out.println(ANSI_RED + "That is not a valid item in the list!" + ANSI_WHITE + " Please try again: ");
 
-        } while (true);
+        } 
 
         vtable[response].invoke();
 
@@ -124,10 +124,10 @@ public class Menu {
          
         String response = "";
 
-        System.out.println("Where should the network be saved? Do not use quotes. Leave blank for default path.");
-        System.out.print(">>>");
+        // System.out.println("Where should the network be saved? Do not use quotes. Leave blank for default path.");
+        // System.out.print(">>> ");
 
-        response = this.getInputPath();
+        // response = this.getInputPath();
 
         if (response != "") {
             this.networkPath = response;
@@ -143,10 +143,10 @@ public class Menu {
     private void loadNetwork() {
         String response = "";
 
-        System.out.println("Where is the network saved? Do not use quotes. Leave blank for default path.");
-        System.out.print(">>>");
+        // System.out.println("Where is the network saved? Do not use quotes. Leave blank for default path.");
+        // System.out.print(">>> ");
 
-        response = this.getInputPath();
+        // response = this.getInputPath();
 
         if (response != "") {
             this.networkPath = response;
@@ -176,7 +176,7 @@ public class Menu {
     }
 
     private int getInputInt() {
-        try {
+        // try {
             Scanner scan = new Scanner(System.in);
 
             int value = Integer.parseInt(scan.nextLine().strip());
@@ -185,14 +185,15 @@ public class Menu {
 
             return value;
 
-        } catch (Exception e) {
-            System.out.println(ANSI_RED + "This is not a valid integer! " + ANSI_WHITE + " Please try again: ");
-            System.out.print(">>>");
-            return getInputInt();
-        }
+        // } catch (Exception e) {
+        //     System.out.println(ANSI_RED + "This is not a valid integer! " + ANSI_WHITE + " Please try again: ");
+        //     System.out.print(">>> ");
+        //     return getInputInt();
+        // }
     }
 
     private String getInputPath() {
+
         // try {
             Scanner scan = new Scanner(System.in);
 
@@ -203,23 +204,23 @@ public class Menu {
             return path;
         // } catch (Exception e) {
         //     System.out.println(ANSI_RED + "This is not a valid path! " + ANSI_WHITE + " Please try again: ");
-        //     System.out.print(">>>");
+        //     System.out.print(">>> ");
         //     return getInputPath();
         // }
     }
 
     private void trainNetwork() {
 
-        System.out.println("Where is the training data saved? Do not use quotes. Leave blank for default path.");
-        System.out.print(">>>");
+        // System.out.println("Where is the training data saved? Do not use quotes. Leave blank for default path.");
+        // System.out.print(">>> ");
         
-        this.trainDataPath = getInputPath();
+        // this.trainDataPath = getInputPath();
 
         int epochs = 1;
-        do {
+        while (true) {
 
             System.out.println("How many epochs should be run?");
-            System.out.print(">>>");
+            System.out.print(">>> ");
 
             epochs = this.getInputInt();
             if (epochs >= 0) {
@@ -228,7 +229,7 @@ public class Menu {
 
             System.out.println(ANSI_RED + "That is not a valid epoch number!" + ANSI_WHITE + " Please try again: ");
 
-        } while (true);
+        } 
 
         // off by one
         epochs = epochs++;
