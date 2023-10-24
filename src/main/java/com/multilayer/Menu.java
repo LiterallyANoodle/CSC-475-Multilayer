@@ -179,9 +179,11 @@ public class Menu {
         try {
             Scanner scan = new Scanner(System.in);
 
+            int value = Integer.parseInt(scan.nextLine().strip());
+
             scan.close();
 
-            return Integer.parseInt(scan.nextLine().strip());
+            return value;
 
         } catch (Exception e) {
             System.out.println(ANSI_RED + "This is not a valid integer! " + ANSI_WHITE + " Please try again: ");
@@ -191,7 +193,7 @@ public class Menu {
     }
 
     private String getInputPath() {
-        try {
+        // try {
             Scanner scan = new Scanner(System.in);
 
             String path = scan.nextLine().strip();
@@ -199,11 +201,11 @@ public class Menu {
             scan.close();
 
             return path;
-        } catch (Exception e) {
-            System.out.println(ANSI_RED + "This is not a valid path! " + ANSI_WHITE + " Please try again: ");
-            System.out.print(">>>");
-            return getInputPath();
-        }
+        // } catch (Exception e) {
+        //     System.out.println(ANSI_RED + "This is not a valid path! " + ANSI_WHITE + " Please try again: ");
+        //     System.out.print(">>>");
+        //     return getInputPath();
+        // }
     }
 
     private void trainNetwork() {
