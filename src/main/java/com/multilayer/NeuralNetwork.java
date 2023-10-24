@@ -1,16 +1,16 @@
 package com.multilayer;
 
-import javax.xml.crypto.Data;
-
 public class NeuralNetwork {
 
-    private int DEBUG = 0;
+    private static int DEBUG = 0;
     
     private int inputSize;
     private Layer[] layers;
 
     private Matrix[] outputHistory;
     private double stepSize = 10; // "eta"
+
+    private int epoch;
 
     // instantiate the network to accept input of a certain size 
     // instantiate empty layers from an array which defines their sizes
@@ -20,11 +20,19 @@ public class NeuralNetwork {
         this.stepSize = stepSize;
         for (int i = 0; i < layerSizes.length; i++) {
             if (i != 0) {
-                this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1]);
+                this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1], 10);
                 continue;
             }
-            this.layers[i] = new Layer(layerSizes[i], inputSize);
+            this.layers[i] = new Layer(layerSizes[i], inputSize, 10);
         }
+    }
+
+    public NeuralNetwork(NeuralNetworkMemento mem) {
+        this.inputSize = mem.getInputSize();
+        this.layers = mem.getLayers();
+        this.outputHistory = mem.getOutputHistory();
+        this.stepSize = mem.getStepSize();
+        this.epoch = mem.getEpoch();
     }
 
     // accessors 
@@ -57,6 +65,18 @@ public class NeuralNetwork {
         this.outputHistory = outputHistory;
     }
 
+    public double getStepSize() {
+        return this.stepSize;
+    }
+
+    public int getEpoch() {
+        return this.epoch;
+    }
+
+    public void setEpoch(int epoch) {
+        this.epoch = epoch;
+    }
+
     // utilities 
 
     public String toString() {
@@ -69,6 +89,10 @@ public class NeuralNetwork {
         output += "Network end. \n";
 
         return output;
+    }
+
+    public NeuralNetworkMemento saveToFile(String path) {
+        return new NeuralNetworkMemento(this);
     }
 
     public Matrix forwardPass(Matrix input) {

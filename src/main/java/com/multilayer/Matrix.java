@@ -4,8 +4,9 @@ package com.multilayer;
 import java.util.concurrent.ExecutorService; 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
-class Matrix {
+class Matrix implements java.io.Serializable {
 
     private static short DEBUG = 2;
     private static int MAX_THREADS = 5;
@@ -149,6 +150,15 @@ class Matrix {
             }
         }
         return output;
+    }
+
+    public void fillRandom(int maxRange) {
+        Random rand = new Random(System.nanoTime());
+        for (int i = 0; i < this.getHeight(); i++) {
+            for (int j = 0; j < this.getWidth(); j++) {
+                this.setValueAt((rand.nextDouble() - 0.5) * maxRange, i, j);
+            }
+        }
     }
 
     public Matrix add(Matrix other) {

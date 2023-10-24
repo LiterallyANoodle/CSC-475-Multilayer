@@ -2,7 +2,7 @@ package com.multilayer;
 
 import java.lang.Math;
 
-public class Layer {
+public class Layer implements java.io.Serializable {
 
     // A layer is the smallest unit of the network when nodes are represented as matrices
 
@@ -16,10 +16,17 @@ public class Layer {
         this.setBiases(biases);
     }
 
-    public Layer(int size, int inputSize) {
+    public Layer(int size, int inputSize, int maxRange) {
         this.setSize(size);
-        this.setWeights(new Matrix(size, inputSize));
-        this.setBiases(new Matrix(size, 1));
+
+        Matrix weights = new Matrix(size, inputSize);
+        Matrix biases = new Matrix(size, 1);
+
+        weights.fillRandom(maxRange);
+        biases.fillRandom(maxRange);
+
+        this.setWeights(weights);
+        this.setBiases(biases);
     }
 
     // accessors and mutators 

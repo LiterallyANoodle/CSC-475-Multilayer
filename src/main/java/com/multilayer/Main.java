@@ -13,6 +13,21 @@ class Main {
 
     public static void main(String[] args) {
 
+        // create network of defined shape
+        NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
+
+        long time = System.nanoTime();
+        trainNetwork(mnist, 5);
+        time = System.nanoTime() - time;
+        System.out.println("Took: " + time / 1000000 + "ms");
+        
+    }
+
+    private static void trainNetwork(NeuralNetwork network, int epochs) {
+
+        // off by one
+        epochs = epochs++;
+
         // get training data
         DataPair[] trainingSet = null;
         try {
@@ -20,23 +35,19 @@ class Main {
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }
-        
-        // silly little experiment about randomizing the sequence using race conditions :) 
-        // new Main().fafo();
 
         // make random sequence of indexes 
         int[] randomIndexes = randomPermutation(60_000);
 
-        // create network of defined shape
-        NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
-
         for (int epoch = 1; epoch < 2; epoch++) {
-            mnist.stochasticGradientDescent(trainingSet, randomIndexes, 2, epoch);
+            network.setEpoch(epoch);
+            network.stochasticGradientDescent(trainingSet, randomIndexes, 2, epoch);
         }
+
         for (int i = 0; i < 20; i++) {
-            System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + mnist.forwardPass(trainingSet[randomIndexes[i]].getInputData()) + "\n");
+            System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + network.forwardPass(trainingSet[randomIndexes[i]].getInputData()) + "\n" + "Expected:\n" + trainingSet[randomIndexes[i]].getExpectedOutput());
         }
-        
+
     }
 
     // naiive method of making a random permutation
