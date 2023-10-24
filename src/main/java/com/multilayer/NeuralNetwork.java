@@ -145,7 +145,9 @@ public class NeuralNetwork {
     // each pair is [input, expected output]
     public void processMiniBatch(DataPair[] trainingBatch, int miniBatchNumber) {
 
-        System.out.println("Processing minibatch " + miniBatchNumber + "...");
+        if (DEBUG >= 2) {
+            System.out.println("Processing minibatch " + miniBatchNumber + "...");
+        }
 
         if (DEBUG >= 1) {
             System.out.println("Minibatch inputs 0:\n" + trainingBatch[0].getInputData());
@@ -200,7 +202,9 @@ public class NeuralNetwork {
             System.out.println("Ending network: \n" + this);
         }
 
-        System.out.println("Minibatch number " + miniBatchNumber + " revised network:\n" + this);
+        if (DEBUG >= 2) {
+            System.out.println("Minibatch number " + miniBatchNumber + " revised network:\n" + this);
+        }
 
     }
 

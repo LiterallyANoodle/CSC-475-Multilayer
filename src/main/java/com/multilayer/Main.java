@@ -30,7 +30,12 @@ class Main {
         // create network of defined shape
         NeuralNetwork mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
 
-        
+        for (int epoch = 1; epoch < 6; epoch++) {
+            mnist.stochasticGradientDescent(trainingSet, randomIndexes, 2, epoch);
+        }
+        for (int i = 0; i < 20; i++) {
+            System.out.println("Output of Forward pass with Training data " + (i+1) + " with final network: \n" + mnist.forwardPass(trainingSet[randomIndexes[i]].getInputData()) + "\n");
+        }
         
     }
 
