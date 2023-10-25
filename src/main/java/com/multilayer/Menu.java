@@ -10,15 +10,15 @@ interface VirtualTableEntry {
 
 public class Menu {
 
-    public static int MAX_THREADS = 3;
+    public static final int MAX_THREADS = 3;
 
-    public static int TRAINING_DATA_SIZE = 60_000;
-    public static int TESTING_DATA_SIZE = 10_000;
+    public static final int TRAINING_DATA_SIZE = 60_000;
+    public static final int TESTING_DATA_SIZE = 10_000;
 
-    public static String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
-    public static String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
+    public static final String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
+    public static final String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
 
-    public static String DEFAULT_NETWORK_PATH = ".\\network.txt";
+    public static final String DEFAULT_NETWORK_PATH = ".\\network.txt";
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -30,6 +30,11 @@ public class Menu {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
+    public static final String UNICODE_FULL_FILL = "█";
+    public static final String UNICODE_STRONG_FILL = "▓";
+    public static final String UNICODE_MEDIUM_FILL = "▒";
+    public static final String UNICODE_LIGHT_FILL = "░";
+    public static final String UNICODE_NO_FILL = ".";
 
     private boolean networkLoaded = false;
     private String networkPath = DEFAULT_NETWORK_PATH;
@@ -361,6 +366,146 @@ public class Menu {
         this.scan.nextLine();
 
         this.networkLoadedMenu();
+
+    }
+
+    public void testingViewAllAscii() {
+
+        int[] correct = new int[] {0,0,0,0,0,0,0,0,0,0};
+        int[] totals = new int[] {0,0,0,0,0,0,0,0,0,0};
+
+        // get training data
+        DataPair[] testingSet = null;
+        try {
+            System.out.println("Loading data...");
+            testingSet = DataSetHandler.readAllDataPairs(this.testDataPath, TESTING_DATA_SIZE);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        // run over the data once
+        for (int i = 0; i < TESTING_DATA_SIZE; i++) {
+
+            Matrix output = this.mnist.forwardPass(testingSet[i].getInputData());
+
+            // find the most confident one: 
+            double maxValue = 0;
+            int maxLabel = 0;
+            for (int j = 0; j < output.getHeight(); j++) {
+                if (output.getValueAt(j, 0) > maxValue) {
+                    maxLabel = j;
+                }
+            }
+
+            if (maxLabel == testingSet[i].getExpectedOutInt()) {
+                correct[maxLabel]++;
+            }
+
+            totals[maxLabel]++;
+
+            printAscii(testingSet[i], maxLabel);
+
+        }
+
+        // display with percentages
+        System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
+        float percent = 0f;
+        for (int i = 0; i < totals.length; i++) {
+            percent = (float)correct[i] / (float)totals[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+        }
+
+        System.out.println("Press enter to continue...");
+        this.scan.nextLine();
+
+        this.networkLoadedMenu();
+
+    }
+
+    public void testingViewFalseAscii() {
+
+        int[] correct = new int[] {0,0,0,0,0,0,0,0,0,0};
+        int[] totals = new int[] {0,0,0,0,0,0,0,0,0,0};
+
+        // get training data
+        DataPair[] testingSet = null;
+        try {
+            System.out.println("Loading data...");
+            testingSet = DataSetHandler.readAllDataPairs(this.testDataPath, TESTING_DATA_SIZE);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        // run over the data once
+        for (int i = 0; i < TESTING_DATA_SIZE; i++) {
+
+            Matrix output = this.mnist.forwardPass(testingSet[i].getInputData());
+
+            // find the most confident one: 
+            double maxValue = 0;
+            int maxLabel = 0;
+            for (int j = 0; j < output.getHeight(); j++) {
+                if (output.getValueAt(j, 0) > maxValue) {
+                    maxLabel = j;
+                }
+            }
+
+            if (maxLabel == testingSet[i].getExpectedOutInt()) {
+                correct[maxLabel]++;
+            }
+
+            totals[maxLabel]++;
+
+            if (maxLabel != testingSet[i].getExpectedOutInt()) {
+                printAscii(testingSet[i], maxLabel);
+            }
+
+        }
+
+        // display with percentages
+        System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
+        float percent = 0f;
+        for (int i = 0; i < totals.length; i++) {
+            percent = (float)correct[i] / (float)totals[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+        }
+
+        System.out.println("Press enter to continue...");
+        this.scan.nextLine();
+
+        this.networkLoadedMenu();
+
+    }
+
+    private void printAscii(DataPair dataPair, int guess) {
+
+        boolean correct = (dataPair.getExpectedOutInt() == guess);
+
+        this.clearConsole();
+        System.out.println(ANSI_WHITE + "This number is labeled " + ANSI_YELLOW + dataPair.getExpectedOutInt() + ANSI_WHITE + " and the guess was " + ANSI_YELLOW + guess + ANSI_WHITE + " which is " + (correct ? ANSI_GREEN + "CORRECT!" : ANSI_RED + "FALSE!") + ANSI_WHITE );
+        System.out.println();
+
+        double value;
+        for (int i = 0; i < 28; i++) {
+            for (int j = 0; j < 28; j++) {
+                value = dataPair.getInputData().getValueAt(i, j);
+                if (value < 1f/5f) {
+                    System.out.print(UNICODE_NO_FILL);
+                } else if (value < 2f/5f) {
+                    System.out.print(UNICODE_LIGHT_FILL);
+                } else if (value < 3f/5f) {
+                    System.out.print(UNICODE_MEDIUM_FILL);
+                } else if (value < 4f/5f) {
+                    System.out.print(UNICODE_STRONG_FILL);
+                } else {
+                    System.out.print(UNICODE_FULL_FILL);
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println("\n" + ANSI_WHITE + "Press enter to continue...");
+        this.scan.nextLine();
 
     }
 
