@@ -265,7 +265,7 @@ public class Menu {
         }
 
         System.out.println("Beginning training...");
-        for (int epoch = 1; epoch < 2; epoch++) {
+        for (int epoch = 1; epoch < epochs; epoch++) {
             this.mnist.stochasticGradientDescent(trainingSet, 2);
             System.out.println("Saving network state...");
             new NeuralNetworkMemento(mnist).saveToFile(this.networkPath);
