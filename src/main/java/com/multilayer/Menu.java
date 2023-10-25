@@ -18,7 +18,7 @@ public class Menu {
 
     public static final String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
     public static final String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
-    public static final String DEFAULT_NETWORK_PATH = ".\\network.txt";
+    public static final String DEFAULT_NETWORK_PATH = ".\\network.csv";
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";

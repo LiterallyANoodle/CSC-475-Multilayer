@@ -5,6 +5,7 @@ import java.util.Random;
 public class NeuralNetwork {
 
     private static int DEBUG = 1;
+    private static final int MAX_VARIANCE = 10;
     
     private int inputSize;
     private Layer[] layers;
@@ -26,7 +27,7 @@ public class NeuralNetwork {
                 this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1], 4);
                 continue;
             }
-            this.layers[i] = new Layer(layerSizes[i], inputSize, 10);
+            this.layers[i] = new Layer(layerSizes[i], inputSize, MAX_VARIANCE);
         }
     }
 
@@ -94,8 +95,8 @@ public class NeuralNetwork {
         return output;
     }
 
-    public NeuralNetworkMemento saveToFile(String path) {
-        return new NeuralNetworkMemento(this);
+    public void saveToFile(String path) {
+        new NeuralNetworkMemento(this).saveToFile(path);
     }
 
     public Matrix forwardPass(Matrix input) {
