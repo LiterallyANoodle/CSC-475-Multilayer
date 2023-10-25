@@ -14,6 +14,7 @@ public class Menu {
     public static final int TRAINING_DATA_SIZE = 60_000;
     public static final int TESTING_DATA_SIZE = 10_000;
     public static final int STEP_SIZE = 8;
+    public static final int BATCH_SIZE = 10;
 
     public static final String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
     public static final String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
@@ -266,7 +267,7 @@ public class Menu {
 
         System.out.println("Beginning training...");
         for (int epoch = 1; epoch < epochs; epoch++) {
-            this.mnist.stochasticGradientDescent(trainingSet, 2);
+            this.mnist.stochasticGradientDescent(trainingSet, BATCH_SIZE);
             System.out.println("Saving network state...");
             new NeuralNetworkMemento(mnist).saveToFile(this.networkPath);
         }
