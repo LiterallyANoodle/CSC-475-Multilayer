@@ -66,7 +66,7 @@ public class Menu {
         };
 
         VirtualTableEntry[] vtable = new VirtualTableEntry[9];
-        vtable[0] = () -> {System.exit(0);};
+        vtable[0] = () -> {this.scan.close(); System.exit(0);};
         vtable[1] = () -> {this.trainNetwork();};
         vtable[2] = () -> {this.loadNetwork();};
         vtable[3] = () -> {this.makeNewNetwork();};
@@ -102,7 +102,7 @@ public class Menu {
         };
 
         VirtualTableEntry[] vtable = new VirtualTableEntry[3];
-        vtable[0] = () -> {System.exit(0);};
+        vtable[0] = () -> { this.scan.close(); System.exit(0);};
         vtable[1] = () -> {this.makeNewNetwork();};
         vtable[2] = () -> {this.loadNetwork();};
         
