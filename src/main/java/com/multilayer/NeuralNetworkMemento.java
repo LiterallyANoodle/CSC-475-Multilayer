@@ -24,6 +24,7 @@ public class NeuralNetworkMemento implements java.io.Serializable {
         this.layers = network.getLayers();
         this.outputHistory = network.getOutputHistory();
         this.stepSize = network.getStepSize();
+        this.epoch = network.getEpoch();
     }
 
     private NeuralNetworkMemento(){
@@ -271,6 +272,7 @@ public class NeuralNetworkMemento implements java.io.Serializable {
                 mem.outputHistory[i] = new Matrix(layerSizes[i-1], 0);
             }
             mem.stepSize = stepSize;
+            mem.epoch = epoch;
 
             return mem;
 
