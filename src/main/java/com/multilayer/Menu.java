@@ -84,7 +84,7 @@ public class Menu {
         vtable[4] = () -> {this.trainingAccuracy();};
         vtable[5] = () -> {this.testingAccuracy();};
         vtable[6] = () -> {this.testingViewAllAscii();};
-        vtable[6] = () -> {this.testingViewFalseAscii();};
+        vtable[7] = () -> {this.testingViewFalseAscii();};
         
         int response = 0;
         this.clearConsole();
@@ -496,7 +496,7 @@ public class Menu {
         double value;
         for (int i = 0; i < 28; i++) {
             for (int j = 0; j < 28; j++) {
-                value = dataPair.getInputData().getValueAt(i, j);
+                value = dataPair.getInputData().getValueAt(i*28+j, 0);
                 if (value < 1f/5f) {
                     System.out.print(UNICODE_NO_FILL);
                 } else if (value < 2f/5f) {
@@ -512,8 +512,11 @@ public class Menu {
             System.out.println();
         }
 
-        System.out.println("\n" + ANSI_WHITE + "Press enter to continue...");
-        this.scan.nextLine();
+        System.out.println("\n" + ANSI_WHITE + "Press enter to continue or any other key to exit...");
+        if (this.scan.nextLine().strip() != "") {
+            this.networkLoadedMenu();
+        } 
+
 
     }
 
