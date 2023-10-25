@@ -316,7 +316,7 @@ public class Menu {
         float percent = 0f;
         for (int i = 0; i < totals.length; i++) {
             percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
 
         System.out.println("Press enter to continue...");
@@ -367,7 +367,7 @@ public class Menu {
         float percent = 0f;
         for (int i = 0; i < totals.length; i++) {
             percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
 
         System.out.println("Press enter to continue...");
@@ -420,7 +420,7 @@ public class Menu {
         float percent = 0f;
         for (int i = 0; i < totals.length; i++) {
             percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
 
         System.out.println("Press enter to continue...");
@@ -475,7 +475,7 @@ public class Menu {
         float percent = 0f;
         for (int i = 0; i < totals.length; i++) {
             percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
 
         System.out.println("Press enter to continue...");
