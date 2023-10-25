@@ -13,7 +13,7 @@ public class Menu {
 
     public static final int TRAINING_DATA_SIZE = 60_000;
     public static final int TESTING_DATA_SIZE = 10_000;
-    public static final int STEP_SIZE = 8;
+    public static final int STEP_SIZE = 6;
     public static final int BATCH_SIZE = 10;
 
     public static final String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
@@ -300,6 +300,7 @@ public class Menu {
             for (int j = 0; j < output.getHeight(); j++) {
                 if (output.getValueAt(j, 0) > maxValue) {
                     maxLabel = j;
+                    maxValue = output.getValueAt(j, 0);
                 }
             }
 
@@ -307,17 +308,22 @@ public class Menu {
                 correct[maxLabel]++;
             }
 
-            totals[maxLabel]++;
+            totals[trainingSet[i].getExpectedOutInt()]++;
 
         }
 
         // display with percentages
         System.out.println("\n" + ANSI_GREEN + "Total correct on training data:" + ANSI_WHITE + "\n");
         float percent = 0f;
+        int totalCorrect = 0;
+        float totalPercent = 0f;
         for (int i = 0; i < totals.length; i++) {
-            percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            percent = (float)correct[i] / (float)totals[i] * 100;
+            totalCorrect += correct[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
+        totalPercent = (float)totalCorrect / (float)TRAINING_DATA_SIZE * 100f;
+        System.out.println(ANSI_WHITE + "Total: " + totalCorrect + "/" + TRAINING_DATA_SIZE + " = " + ((totalPercent >= 95) ? ANSI_GREEN : ANSI_CYAN) + totalPercent + "%" + ANSI_WHITE);
 
         System.out.println("Press enter to continue...");
         this.scan.nextLine();
@@ -351,6 +357,7 @@ public class Menu {
             for (int j = 0; j < output.getHeight(); j++) {
                 if (output.getValueAt(j, 0) > maxValue) {
                     maxLabel = j;
+                    maxValue = output.getValueAt(j, 0);
                 }
             }
 
@@ -358,17 +365,22 @@ public class Menu {
                 correct[maxLabel]++;
             }
 
-            totals[maxLabel]++;
+            totals[testingSet[i].getExpectedOutInt()]++;
 
         }
 
         // display with percentages
         System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
         float percent = 0f;
+        int totalCorrect = 0;
+        float totalPercent = 0f;
         for (int i = 0; i < totals.length; i++) {
-            percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            percent = (float)correct[i] / (float)totals[i] * 100;
+            totalCorrect += correct[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
+        totalPercent = (float)totalCorrect / (float)TESTING_DATA_SIZE * 100f;
+        System.out.println(ANSI_WHITE + "Total: " + totalCorrect + "/" + TESTING_DATA_SIZE + " = " + ((totalPercent >= 95) ? ANSI_GREEN : ANSI_CYAN) + totalPercent + "%" + ANSI_WHITE);
 
         System.out.println("Press enter to continue...");
         this.scan.nextLine();
@@ -402,6 +414,7 @@ public class Menu {
             for (int j = 0; j < output.getHeight(); j++) {
                 if (output.getValueAt(j, 0) > maxValue) {
                     maxLabel = j;
+                    maxValue = output.getValueAt(j, 0);
                 }
             }
 
@@ -418,10 +431,15 @@ public class Menu {
         // display with percentages
         System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
         float percent = 0f;
+        int totalCorrect = 0;
+        float totalPercent = 0f;
         for (int i = 0; i < totals.length; i++) {
-            percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            percent = (float)correct[i] / (float)totals[i] * 100;
+            totalCorrect += correct[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
+        totalPercent = (float)totalCorrect / (float)TESTING_DATA_SIZE * 100f;
+        System.out.println(ANSI_WHITE + "Total: " + totalCorrect + "/" + TESTING_DATA_SIZE + " = " + ((totalPercent >= 95) ? ANSI_GREEN : ANSI_CYAN) + totalPercent + "%" + ANSI_WHITE);
 
         System.out.println("Press enter to continue...");
         this.scan.nextLine();
@@ -455,6 +473,7 @@ public class Menu {
             for (int j = 0; j < output.getHeight(); j++) {
                 if (output.getValueAt(j, 0) > maxValue) {
                     maxLabel = j;
+                    maxValue = output.getValueAt(j, 0);
                 }
             }
 
@@ -473,10 +492,15 @@ public class Menu {
         // display with percentages
         System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
         float percent = 0f;
+        int totalCorrect = 0;
+        float totalPercent = 0f;
         for (int i = 0; i < totals.length; i++) {
-            percent = (float)correct[i] / (float)totals[i];
-            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+            percent = (float)correct[i] / (float)totals[i] * 100;
+            totalCorrect += correct[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + " = " + ((percent >= 95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
         }
+        totalPercent = (float)totalCorrect / (float)TESTING_DATA_SIZE * 100f;
+        System.out.println(ANSI_WHITE + "Total: " + totalCorrect + "/" + TESTING_DATA_SIZE + " = " + ((totalPercent >= 95) ? ANSI_GREEN : ANSI_CYAN) + totalPercent + "%" + ANSI_WHITE);
 
         System.out.println("Press enter to continue...");
         this.scan.nextLine();
