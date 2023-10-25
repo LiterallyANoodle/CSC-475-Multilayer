@@ -1,7 +1,6 @@
 package com.multilayer;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 // so I can call arbitrary functions
 interface VirtualTableEntry {
