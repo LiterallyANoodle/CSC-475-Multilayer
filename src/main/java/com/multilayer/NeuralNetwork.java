@@ -23,7 +23,7 @@ public class NeuralNetwork {
         this.epoch = 0;
         for (int i = 0; i < layerSizes.length; i++) {
             if (i != 0) {
-                this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1], 10);
+                this.layers[i] = new Layer(layerSizes[i], layerSizes[i-1], 4);
                 continue;
             }
             this.layers[i] = new Layer(layerSizes[i], inputSize, 10);

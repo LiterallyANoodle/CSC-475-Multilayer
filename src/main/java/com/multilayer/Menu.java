@@ -10,14 +10,14 @@ interface VirtualTableEntry {
 
 public class Menu {
 
-    public static final int MAX_THREADS = 3;
+    public static final int MAX_THREADS = 5;
 
     public static final int TRAINING_DATA_SIZE = 60_000;
     public static final int TESTING_DATA_SIZE = 10_000;
+    public static final int STEP_SIZE = 8;
 
     public static final String TRAINING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_train.csv";
     public static final String TESTING_DATA_PATH = ".\\src\\main\\java\\com\\multilayer\\mnist_test.csv";
-
     public static final String DEFAULT_NETWORK_PATH = ".\\network.txt";
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -154,7 +154,7 @@ public class Menu {
 
         System.out.println("Making new network...");
 
-        this.mnist = new NeuralNetwork(784, new int[] {15, 10}, 3);
+        this.mnist = new NeuralNetwork(784, new int[] {15, 10}, STEP_SIZE);
         this.networkLoaded = true;
         this.networkLoadedMenu();
     }
