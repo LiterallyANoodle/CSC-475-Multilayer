@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class NeuralNetwork {
 
-    private static int DEBUG = 0;
+    private static int DEBUG = 1;
     
     private int inputSize;
     private Layer[] layers;
@@ -144,8 +144,8 @@ public class NeuralNetwork {
 
     public void stochasticGradientDescent(DataPair[] trainingData, int miniBatchSize) {
 
+        // metadata
         this.setEpoch(this.getEpoch() + 1);
-
         int[] randomIndexes = randomPermutation(trainingData.length);
 
         if (DEBUG >= 1) {
@@ -169,6 +169,7 @@ public class NeuralNetwork {
         if (DEBUG >= 1) {
             System.out.println("Epoch " + this.getEpoch() + " complete.");
         }
+
         
     }
 
@@ -180,7 +181,7 @@ public class NeuralNetwork {
             System.out.println("Processing minibatch " + miniBatchNumber + "...");
         }
 
-        if (DEBUG >= 1) {
+        if (DEBUG >= 3) {
             System.out.println("Minibatch inputs 0:\n" + trainingBatch[0].getInputData());
             System.out.println("Minibatch inputs 1:\n" + trainingBatch[1].getInputData());
             System.out.println("Minibatch expected output 0:\n" + trainingBatch[0].getExpectedOutput());

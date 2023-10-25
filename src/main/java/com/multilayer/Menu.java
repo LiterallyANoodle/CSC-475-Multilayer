@@ -36,6 +36,8 @@ public class Menu {
     private String trainDataPath = TRAINING_DATA_PATH;
     private String testDataPath = TESTING_DATA_PATH;
 
+    private Scanner scan = new Scanner(System.in);
+
     private NeuralNetwork mnist;
     
     public Menu() {
@@ -58,7 +60,9 @@ public class Menu {
             "Exit",
             "Train the loaded network",
             "Load an existing network from file",
-            "Create a new network"
+            "Create a new network",
+            "Try accuracy with training data",
+            "Try accuracy with testing data"
         };
 
         VirtualTableEntry[] vtable = new VirtualTableEntry[9];
@@ -66,6 +70,8 @@ public class Menu {
         vtable[1] = () -> {this.trainNetwork();};
         vtable[2] = () -> {this.loadNetwork();};
         vtable[3] = () -> {this.makeNewNetwork();};
+        vtable[4] = () -> {this.trainingAccuracy();};
+        vtable[5] = () -> {this.testingAccuracy();};
         
         int response = 0;
         this.clearConsole();
@@ -175,46 +181,49 @@ public class Menu {
         System.out.flush();
     }
 
+    // bizarrely, closing one of these scanners also closes System.in??
     private int getInputInt() {
-        // try {
-            Scanner scan = new Scanner(System.in);
+        try {
+            // Scanner scan = new Scanner(System.in);
 
-            int value = Integer.parseInt(scan.nextLine().strip());
+            int value = Integer.parseInt(this.scan.nextLine().strip());
 
-            scan.close();
+            // scan.close();
 
             return value;
 
-        // } catch (Exception e) {
-        //     System.out.println(ANSI_RED + "This is not a valid integer! " + ANSI_WHITE + " Please try again: ");
-        //     System.out.print(">>> ");
-        //     return getInputInt();
-        // }
+        } catch (Exception e) {
+            System.out.println(ANSI_RED + "This is not a valid integer! " + ANSI_WHITE + " Please try again: ");
+            System.out.print(">>> ");
+            return getInputInt();
+        }
     }
 
     private String getInputPath() {
 
-        // try {
-            Scanner scan = new Scanner(System.in);
+        try {
+            // Scanner scan = new Scanner(System.in);
 
-            String path = scan.nextLine().strip();
+            String path = this.scan.nextLine().strip();
 
-            scan.close();
+            // scan.close();
 
             return path;
-        // } catch (Exception e) {
-        //     System.out.println(ANSI_RED + "This is not a valid path! " + ANSI_WHITE + " Please try again: ");
-        //     System.out.print(">>> ");
-        //     return getInputPath();
-        // }
+        } catch (Exception e) {
+            System.out.println(ANSI_RED + "This is not a valid path! " + ANSI_WHITE + " Please try again: ");
+            System.out.print(">>> ");
+            return getInputPath();
+        }
     }
 
     private void trainNetwork() {
 
         // System.out.println("Where is the training data saved? Do not use quotes. Leave blank for default path.");
         // System.out.print(">>> ");
-        
+
         // this.trainDataPath = getInputPath();
+
+        // System.out.println(this.trainDataPath);
 
         int epochs = 1;
         while (true) {
@@ -237,15 +246,121 @@ public class Menu {
         // get training data
         DataPair[] trainingSet = null;
         try {
-            trainingSet = DataSetHandler.readAllDataPairs(this.trainDataPath, 60_000);
+            System.out.println("Loading data...");
+            trainingSet = DataSetHandler.readAllDataPairs(this.trainDataPath, TRAINING_DATA_SIZE);
         } catch (Exception e) {
             System.out.println(e);
         }
 
+        System.out.println("Beginning training...");
         for (int epoch = 1; epoch < 2; epoch++) {
-            this.mnist.setEpoch(epoch);
             this.mnist.stochasticGradientDescent(trainingSet, 2);
+            System.out.println("Saving network state...");
+            new NeuralNetworkMemento(mnist).saveToFile(this.networkPath);
         }
+
+    }
+
+
+    public void trainingAccuracy() {
+
+        int[] correct = new int[] {0,0,0,0,0,0,0,0,0,0};
+        int[] totals = new int[] {0,0,0,0,0,0,0,0,0,0};
+
+        // get training data
+        DataPair[] trainingSet = null;
+        try {
+            System.out.println("Loading data...");
+            trainingSet = DataSetHandler.readAllDataPairs(this.trainDataPath, TRAINING_DATA_SIZE);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        // run over the data once
+        for (int i = 0; i < TRAINING_DATA_SIZE; i++) {
+
+            Matrix output = this.mnist.forwardPass(trainingSet[i].getInputData());
+
+            // find the most confident one: 
+            double maxValue = 0;
+            int maxLabel = 0;
+            for (int j = 0; j < output.getHeight(); j++) {
+                if (output.getValueAt(j, 0) > maxValue) {
+                    maxLabel = j;
+                }
+            }
+
+            if (maxLabel == trainingSet[i].getExpectedOutInt()) {
+                correct[maxLabel]++;
+            }
+
+            totals[maxLabel]++;
+
+        }
+
+        // display with percentages
+        System.out.println("\n" + ANSI_GREEN + "Total correct on training data:" + ANSI_WHITE + "\n");
+        float percent = 0f;
+        for (int i = 0; i < totals.length; i++) {
+            percent = (float)correct[i] / (float)totals[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+        }
+
+        System.out.println("Press enter to continue...");
+        this.scan.nextLine();
+
+        this.networkLoadedMenu();
+
+    }
+
+    public void testingAccuracy() {
+
+        int[] correct = new int[] {0,0,0,0,0,0,0,0,0,0};
+        int[] totals = new int[] {0,0,0,0,0,0,0,0,0,0};
+
+        // get training data
+        DataPair[] testingSet = null;
+        try {
+            System.out.println("Loading data...");
+            testingSet = DataSetHandler.readAllDataPairs(this.testDataPath, TESTING_DATA_SIZE);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        // run over the data once
+        for (int i = 0; i < TESTING_DATA_SIZE; i++) {
+
+            Matrix output = this.mnist.forwardPass(testingSet[i].getInputData());
+
+            // find the most confident one: 
+            double maxValue = 0;
+            int maxLabel = 0;
+            for (int j = 0; j < output.getHeight(); j++) {
+                if (output.getValueAt(j, 0) > maxValue) {
+                    maxLabel = j;
+                }
+            }
+
+            if (maxLabel == testingSet[i].getExpectedOutInt()) {
+                correct[maxLabel]++;
+            }
+
+            totals[maxLabel]++;
+
+        }
+
+        // display with percentages
+        System.out.println("\n" + ANSI_GREEN + "Total correct on testing data:" + ANSI_WHITE + "\n");
+        float percent = 0f;
+        for (int i = 0; i < totals.length; i++) {
+            percent = (float)correct[i] / (float)totals[i];
+            System.out.println(ANSI_WHITE + i + ": " + correct[i] + "/" + totals[i] + ((percent >= 0.95) ? ANSI_GREEN : ANSI_CYAN) + percent + "%" + ANSI_WHITE);
+        }
+
+        System.out.println("Press enter to continue...");
+        this.scan.nextLine();
+
+        this.networkLoadedMenu();
 
     }
 

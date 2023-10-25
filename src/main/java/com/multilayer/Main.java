@@ -259,16 +259,16 @@ class Main {
         DataPair[] trainingData = new DataPair[4];
 
         // input pair 1
-        trainingData[0] = new DataPair(new Matrix(new double[][] {{0}, {1}, {0}, {1}}), new Matrix(new double[][] {{0}, {1}}));
+        trainingData[0] = new DataPair(new Matrix(new double[][] {{0}, {1}, {0}, {1}}), new Matrix(new double[][] {{0}, {1}}), 1);
 
         // input pair 2
-        trainingData[1] = new DataPair(new Matrix(new double[][] {{1}, {0}, {1}, {0}}), new Matrix(new double[][] {{1}, {0}}));
+        trainingData[1] = new DataPair(new Matrix(new double[][] {{1}, {0}, {1}, {0}}), new Matrix(new double[][] {{1}, {0}}), 0);
 
         // input pair 3
-        trainingData[2] = new DataPair(new Matrix(new double[][] {{0}, {0}, {1}, {1}}), new Matrix(new double[][] {{0}, {1}}));
+        trainingData[2] = new DataPair(new Matrix(new double[][] {{0}, {0}, {1}, {1}}), new Matrix(new double[][] {{0}, {1}}), 1);
         
         // input pair 4
-        trainingData[3] = new DataPair(new Matrix(new double[][] {{1}, {1}, {0}, {0}}), new Matrix(new double[][] {{1}, {0}}));
+        trainingData[3] = new DataPair(new Matrix(new double[][] {{1}, {1}, {0}, {0}}), new Matrix(new double[][] {{1}, {0}}), 0);
 
         // for (int epoch = 1; epoch < 7; epoch++) {
         //     testNet.stochasticGradientDescent(trainingData, 2, epoch);

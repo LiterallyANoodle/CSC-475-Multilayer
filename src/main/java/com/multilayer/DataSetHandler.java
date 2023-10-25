@@ -47,7 +47,7 @@ public class DataSetHandler {
         // then init matrix... -> transpose to column...
         Matrix imgDataMat = new Matrix(new double[][] {imgDataValues}).transpose();
 
-        return new DataPair(imgDataMat, labelMat);
+        return new DataPair(imgDataMat, labelMat, labelInt);
 
     }
 

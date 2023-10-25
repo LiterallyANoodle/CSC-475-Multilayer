@@ -21,7 +21,6 @@ public class NeuralNetworkMemento implements java.io.Serializable {
         this.layers = network.getLayers();
         this.outputHistory = network.getOutputHistory();
         this.stepSize = network.getStepSize();
-
     }
 
     public int getInputSize() {
