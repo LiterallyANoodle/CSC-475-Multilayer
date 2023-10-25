@@ -62,21 +62,29 @@ public class Menu {
 
     private void networkLoadedMenu() {
         String[] labels = new String[] {
-            "Exit",
+            "Save and exit",
             "Train the loaded network",
             "Load an existing network from file",
             "Create a new network",
             "Try accuracy with training data",
-            "Try accuracy with testing data"
+            "Try accuracy with testing data",
+            "View all classifications on testing set",
+            "View incorrect classifications on testing set"
         };
 
         VirtualTableEntry[] vtable = new VirtualTableEntry[9];
-        vtable[0] = () -> {this.scan.close(); System.exit(0);};
+        vtable[0] = () -> {
+            this.scan.close(); 
+            this.mnist.saveToFile(this.networkPath);
+            System.exit(0);
+        };
         vtable[1] = () -> {this.trainNetwork();};
         vtable[2] = () -> {this.loadNetwork();};
         vtable[3] = () -> {this.makeNewNetwork();};
         vtable[4] = () -> {this.trainingAccuracy();};
         vtable[5] = () -> {this.testingAccuracy();};
+        vtable[6] = () -> {this.testingViewAllAscii();};
+        vtable[6] = () -> {this.testingViewFalseAscii();};
         
         int response = 0;
         this.clearConsole();
