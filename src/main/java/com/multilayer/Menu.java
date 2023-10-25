@@ -254,7 +254,7 @@ public class Menu {
         } 
 
         // off by one
-        epochs = epochs++;
+        epochs++;
 
         // get training data
         DataPair[] trainingSet = null;
